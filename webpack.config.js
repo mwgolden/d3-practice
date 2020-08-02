@@ -14,6 +14,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: ["babel-loader"]
+      },
+      {
+        test: /\.csv$/,
+        loader: "dsv-loader"
       }
     ]
   },
