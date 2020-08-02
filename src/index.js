@@ -7,7 +7,8 @@ let observations = data.map(
   d => {
       return {
         "humidity": d.humidity,
-        "dewPoint": d.dewPoint
+        "dewPoint": d.dewPoint,
+        "cloudCover": d.cloudCover
       }
   }
 )
