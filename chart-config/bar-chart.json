@@ -1,0 +1,27 @@
+{
+  "dimensions": {
+    "width": 600,
+    "height": 360,
+    "margin": {
+      "top": 30,
+      "right": 10,
+      "bottom": 50,
+      "left": 50
+    }
+  },
+  "bars": {
+    "color": "dodgerblue",
+    "padding": 1,
+    "label": {
+      "fontColor": "lightgrey",
+      "fontSize": "12px",
+      "fontFamily": "sans-serif",
+      "textAnchor": "middle"
+    }
+  },
+  "xAxisLabel":{
+    "fontColor": "black",
+    "fontSize": "1.4em",
+    "text": "Humidty"
+  }
+}

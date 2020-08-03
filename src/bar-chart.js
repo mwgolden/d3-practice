@@ -1,45 +1,34 @@
 import * as d3 from 'd3'
+import config from '../chart-config/bar-chart.json'
 
 export function barChart(data){
-
+  console.log(config)
   /* Access Data */
   const metric = d => d //.humidity
   const yAccessor = d => d.length
   /* Chart Dimensions */
-  const width = 600
 
-  let dimensions = {
-    width: width,
-    height: width * 0.6,
-    margin: {
-      top: 30,
-      right: 10,
-      bottom: 50,
-      left: 50
-    }
-  }
+  config.dimensions.boundedWidth = config.dimensions.width
+      - config.dimensions.margin.right
+      - config.dimensions.margin.left
 
-  dimensions.boundedWidth = dimensions.width
-      - dimensions.margin.right
-      - dimensions.margin.left
-
-  dimensions.boundedHeight = dimensions.height
-      - dimensions.margin.top
-      - dimensions.margin.bottom
+  config.dimensions.boundedHeight = config.dimensions.height
+      - config.dimensions.margin.top
+      - config.dimensions.margin.bottom
   /* Chart Canvas */
   const svg = d3.create("svg")
-      .attr("width", dimensions.width)
-      .attr("height", dimensions.height)
+      .attr("width", config.dimensions.width)
+      .attr("height", config.dimensions.height)
 
   const bounds = svg.append("g")
       .style("transform", `translate(
-        ${dimensions.margin.left}px,
-        ${dimensions.margin.top}px
+        ${config.dimensions.margin.left}px,
+        ${config.dimensions.margin.top}px
       )`)
   /* Create Scales */
   const xScale = d3.scaleLinear()
       .domain(d3.extent(data, metric))
-      .range([0, dimensions.boundedWidth])
+      .range([0, config.dimensions.boundedWidth])
       .nice()
 
   const barGenerator = d3.histogram()
@@ -51,7 +40,7 @@ export function barChart(data){
 
   const yScale = d3.scaleLinear()
       .domain([0, d3.max(bars, yAccessor)])
-      .range([dimensions.boundedHeight, 0])
+      .range([config.dimensions.boundedHeight, 0])
       .nice()
   /* Draw Data */
   const barsGroup = bounds.append("g")
@@ -59,8 +48,8 @@ export function barChart(data){
   const barGroups = barsGroup.selectAll("g")
       .data(bars)
       .enter().append("g")
-  console.log(bars)
-  const barPadding = 1
+
+  const barPadding = config.bars.padding
 
   const barRects = barGroups.append("rect")
       .attr("x", d => xScale(d.x0) + barPadding / 2)
@@ -68,34 +57,33 @@ export function barChart(data){
       .attr("width", d => d3.max([
         0, xScale(d.x1) - xScale(d.x0) - barPadding
       ]))
-      .attr("height", d => dimensions.boundedHeight - yScale(yAccessor(d)))
-      .attr("fill", "dodgerblue")
+      .attr("height", d => config.dimensions.boundedHeight - yScale(yAccessor(d)))
+      .attr("fill", config.bars.color)
 
   const barText = barGroups.filter(yAccessor)
     .append("text")
       .attr("x", d => xScale(d.x0) + (xScale(d.x1) - xScale(d.x0)) / 2)
       .attr("y", d => yScale(yAccessor(d)) - 5)
-      .attr("fill", "lightgrey")
+      .attr("fill", config.bars.label.fontColor)
       .text(yAccessor)
-      .style("text-anchor", "middle")
-      .style("font-size", "12px")
-      .style("font-family", "sans-serif")
+      .style("text-anchor", config.bars.label.textAnchor)
+      .style("font-size", config.bars.label.fontSize)
+      .style("font-family", config.bars.label.fontFamily)
 
   /* Draw Peripherals */
   const xAxisGenerator = d3.axisBottom()
       .scale(xScale)
   const xAxis = bounds.append("g")
       .style("transform", `translateY(
-        ${dimensions.boundedHeight}px
+        ${config.dimensions.boundedHeight}px
       )`)
   xAxisGenerator(xAxis)
   const xAxisLabel = xAxis.append("text")
-      .attr("x", dimensions.boundedWidth / 2)
-      .attr("y", dimensions.margin.bottom - 10)
-      .attr("fill", "black")
-      .attr("font-size", "1.4em")
-      .text("Humidity")
-      .style("text-anchor", "middle")
+      .attr("x", config.dimensions.boundedWidth / 2)
+      .attr("y", config.dimensions.margin.bottom - 10)
+      .attr("fill", config.xAxisLabel.fontColor)
+      .attr("font-size", config.xAxisLabel.fontSize)
+      .text(config.xAxisLabel.text)
   /* Set up interactions */
 
   return svg.node()
