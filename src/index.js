@@ -2,6 +2,7 @@ import "./main.css"
 import data from '../data/nyc_weather_data.json'
 import { scatterPlot } from './scatter-plot.js'
 import { lineChart } from './line-chart.js'
+import { barChart } from './bar-chart.js'
 
 let observations = data.map(
   d => {
@@ -12,6 +13,10 @@ let observations = data.map(
       }
   }
 )
+let humidityMeasurements = data.map(
+  d => d.humidity
+)
 wrapper = document.getElementById("wrapper")
 wrapper.append(scatterPlot(observations))
+wrapper.append(barChart(humidityMeasurements))
 //lineChart(data)
