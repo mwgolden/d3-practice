@@ -1,11 +1,12 @@
 import * as d3 from 'd3'
-import config from '../chart-config/bar-chart.json'
 
-export function barChart(data){
-  console.log(config)
+
+export function barChart(data, config){
+
   /* Access Data */
   const metric = d => d //.humidity
   const yAccessor = d => d.length
+  const mean = d3.mean(data, metric)
   /* Chart Dimensions */
 
   config.dimensions.boundedWidth = config.dimensions.width
@@ -84,6 +85,22 @@ export function barChart(data){
       .attr("fill", config.xAxisLabel.fontColor)
       .attr("font-size", config.xAxisLabel.fontSize)
       .text(config.xAxisLabel.text)
+
+  const meanLine = bounds.append("line")
+      .attr("x1", xScale(mean))
+      .attr("x2", xScale(mean))
+      .attr("y1", -15)
+      .attr("y2", config.dimensions.boundedHeight)
+      .attr("stroke", "maroon")
+      .attr("stroke-dasharray", "2px 4px")
+
+  const meanLabel = bounds.append("text")
+      .attr("x", xScale(mean))
+      .attr("y", -20)
+      .text("mean")
+      .attr("fill", "maroon")
+      .style("font-size", "12px")
+      .style("text-anchor", "middle")
   /* Set up interactions */
 
   return svg.node()
