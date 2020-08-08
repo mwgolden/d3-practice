@@ -3,8 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title>D3 Practice</title>
+    <style media="screen">
+      .box {
+        height: 100px;
+        width: 100px;
+        background: dodgerblue;
+        transition: transform 1s,
+                    background 2s ease-out;
+      }
+      .box:hover {
+        background: green;
+        transform: translateX(30px);
+      }
+    </style>
   </head>
   <body>
+    <div class="box">
+
+    </div>
+    <div class="barchart">
+      <select class="select" id="barchart-select">
+        <option value="humidity">Humidity</option>
+        <option value="dewPoint">Dew Point</option>
+        <option value="moonPhase">Moon Phase</option>
+      </select>
+      <div class="chart" id="barchart">
+
+      </div>
+    </div>
     <div id="wrapper">
 
     </div>

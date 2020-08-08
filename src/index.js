@@ -4,6 +4,8 @@ import { scatterPlot } from './scatter-plot.js'
 import { lineChart } from './line-chart.js'
 import { barChart } from './bar-chart.js'
 import config from '../chart-config/bar-chart.json'
+import { pieChart } from './pie-chart.js'
+
 
 let observations = data.map(
   d => {
@@ -15,27 +17,45 @@ let observations = data.map(
   }
 )
 
-let humidityMeasurements = data.map(
-  d => d.humidity
-)
-let mDewPoint = data.map(
-  d => d.dewPoint
-)
-let mMoonPhase = data.map(
-  d => d.moonPhase
-)
-wrapper = document.getElementById("wrapper")
-wrapper.append(scatterPlot(observations))
-wrapper.append(barChart(humidityMeasurements, config))
+function selectEvent(event) {
+  let measure = event.target.selectedOptions[0].value
+  drawBarChart(measure)
+}
+function drawBarChart(measure) {
 
-config.xAxisLabel.text = "Dew Point"
-const dewpointdiv = document.createElement("div")
-dewpointdiv.append(barChart(mDewPoint, config))
-document.body.append(dewpointdiv)
+  let chart = document.getElementById("barchart")
+  chart.querySelectorAll('*').forEach(n => n.remove())
+  switch(measure) {
+    case 'humidity':
+      let humidityMeasurements = data.map(
+        d => d.humidity
+      )
+      config.xAxisLabel.text = "Humidity"
+      chart.append(barChart(humidityMeasurements, config))
+    break;
+    case 'dewPoint':
+      let mDewPoint = data.map(
+        d => d.dewPoint
+      )
+      config.xAxisLabel.text = "Dew Point"
+      chart.append(barChart(mDewPoint, config))
+    break;
+    case 'moonPhase':
+      let mMoonPhase = data.map(
+        d => d.moonPhase
+      )
+      config.xAxisLabel.text = "Moon Phase"
+      chart.append(barChart(mMoonPhase, config))
+    break;
+  }
 
-config.xAxisLabel.text = "Moon Phase"
-const moonPhaseDiv = document.createElement("div")
-moonPhaseDiv.append(barChart(mMoonPhase, config))
-document.body.append(moonPhaseDiv)
+}
 
+const barChartSelect = document.getElementById("barchart-select")
+barChartSelect.addEventListener("change", selectEvent)
+drawBarChart('humidity')
+
+const pieDiv = document.createElement("div")
+pieDiv.append(pieChart())
+document.body.append(pieDiv)
 //lineChart(data)
